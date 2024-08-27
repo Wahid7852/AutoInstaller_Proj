@@ -4,7 +4,6 @@ import asyncio
 import websockets
 from PIL import Image, ImageTk
 
-# Define the IP address groups for the labs
 LAB_IPS = {
     'IT Lab': [
         ["192.168.1.10", "192.168.1.11", "192.168.1.12"],
@@ -18,69 +17,85 @@ LAB_IPS = {
     ]
 }
 
-# Function to send WebSocket request
-async def send_request(ip_address, semester):
-    uri = f"ws://{ip_address}:8765"
-    async with websockets.connect(uri) as websocket:
-        await websocket.send(semester)
-        response = await websocket.recv()
-        print(response)
-        return response
+SEMESTER_SOFTWARES = {
+    "Semester 1": ["VS Code", "Python", "Git"],
+    "Semester 2": ["Java", "Eclipse", "Maven"],
+    "Semester 3": ["MySQL", "PHP", "Apache"],
+    "Semester 4": ["Docker", "Kubernetes", "Jenkins"],
+    "Semester 5": ["React", "Node.js", "MongoDB"],
+    "Semester 6": ["AWS CLI", "Terraform", "Ansible"]
+}
 
-async def send_requests_to_group(ip_group, semester):
+async def send_request(ip_address, command):
+    uri = f"ws://{ip_address}:35369"
+    try:
+        async with websockets.connect(uri) as websocket:
+            await websocket.send(command)
+            print(f"Sent '{command}' to {ip_address}")
+    except asyncio.TimeoutError:
+        print(f"Timeout connecting to {ip_address}. Moving to the next IP.")
+    except Exception as e:
+        print(f"Error connecting to {ip_address}: {e}")
+
+async def send_requests_to_group(ip_group, command):
     for ip_address in ip_group:
-        await send_request(ip_address, semester)
+        await send_request(ip_address, command)
+    await asyncio.sleep(3)
 
 def on_install_button_click():
     selected_lab = lab_combobox.get()
     selected_semester = semester_combobox.get()
-    
+
     if not selected_lab:
         messagebox.showwarning("Warning", "Please select a lab")
         return
 
     if not selected_semester:
-        messagebox.showwarning("Warning", "Please select a semester")
+        messagebox.showwarning("Warning", "Please select a software package")
         return
 
     if not acknowledge_var.get():
         messagebox.showwarning("Warning", "Please acknowledge")
         return
 
+    command = "open_notepad"
     ip_groups = LAB_IPS[selected_lab]
     for ip_group in ip_groups:
-        asyncio.run(send_requests_to_group(ip_group, selected_semester))
+        asyncio.run(send_requests_to_group(ip_group, command))
     messagebox.showinfo("Info", "Requests sent successfully")
 
 def on_update_button_click():
-    # Placeholder function for update functionality
     messagebox.showinfo("Update", "Update functionality is not implemented yet.")
 
-# Create the main application window
+def on_list_softwares_button_click():
+    selected_semester = semester_combobox.get()
+    if not selected_semester:
+        messagebox.showwarning("Warning", "Please select a software package")
+        return
+
+    software_list = SEMESTER_SOFTWARES.get(selected_semester, [])
+    software_display = "\n".join(software_list) if software_list else "No software available for this semester."
+    messagebox.showinfo("Software List", f"List of software packages for {selected_semester}:\n\n{software_display}")
+
 root = tk.Tk()
 root.title("Automated Software Installer")
 root.call("wm", "attributes", ".", "-zoomed", "True")
 
-# Load and set the techy background
 bg_image = Image.open("img/tech_background.jpg")
 bg_photo = ImageTk.PhotoImage(bg_image)
 background_label = tk.Label(root, image=bg_photo)
 background_label.place(x=0, y=0)
 
-# Create a frame in the center of the window
 center_frame = tk.Frame(root, bg='#2e2e2e')
 center_frame.place(relx=0.5, rely=0.5, anchor='center')
 
-# Font settings
 font_large = ('Helvetica', 18, 'bold')
 font_medium = ('Helvetica', 14)
-font_dropdown = ('Helvetica', 16)  # Increased font size for dropdown
+font_dropdown = ('Helvetica', 16)
 
-# Set the style for the combobox
 style = ttk.Style()
 style.configure("TCombobox", font=font_dropdown, padding=5)
 
-# Lab selection label and dropdown in one line
 lab_frame = tk.Frame(center_frame, bg='#2e2e2e')
 lab_frame.pack(pady=10)
 
@@ -90,19 +105,16 @@ lab_label.pack(side='left', padx=(0, 10))
 lab_combobox = ttk.Combobox(lab_frame, values=list(LAB_IPS.keys()), width=30, state='readonly')
 lab_combobox.pack(side='left')
 
-# Semester selection label and dropdown
 semester_frame = tk.Frame(center_frame, bg='#2e2e2e')
 semester_frame.pack(pady=10)
 
 semester_label = tk.Label(semester_frame, text="Software Package:", bg='#2e2e2e', fg='#ffffff', font=font_large)
 semester_label.pack(side='left', padx=(0, 10))
 
-# Dropdown for selecting semester
 semesters = [f"Semester {i}" for i in range(1, 7)]
 semester_combobox = ttk.Combobox(semester_frame, values=semesters, width=30, state='readonly')
 semester_combobox.pack(side='left')
 
-# Acknowledgment checkbox
 acknowledge_var = tk.BooleanVar()
 acknowledge_checkbutton = tk.Checkbutton(
     center_frame,
@@ -117,20 +129,17 @@ acknowledge_checkbutton = tk.Checkbutton(
 )
 acknowledge_checkbutton.pack(pady=10)
 
-# Buttons frame
 buttons_frame = tk.Frame(center_frame, bg='#2e2e2e')
 buttons_frame.pack(pady=20)
 
-# Install button
 install_button = tk.Button(buttons_frame, text="Install", command=on_install_button_click, bg='#000000', fg='#ffffff', font=font_large)
 install_button.pack(side='left', padx=10)
 
-# Update button
 update_button = tk.Button(buttons_frame, text="Update", command=on_update_button_click, bg='#000000', fg='#ffffff', font=font_large)
 update_button.pack(side='left', padx=10)
 
-# Allow exit with "Esc" key
-root.bind("<Escape>", lambda event: root.destroy())
+list_softwares_button = tk.Button(buttons_frame, text="List Softwares", command=on_list_softwares_button_click, bg='#000000', fg='#ffffff', font=font_large)
+list_softwares_button.pack(side='left', padx=10)
 
-# Run the application
+root.bind("<Escape>", lambda event: root.destroy())
 root.mainloop()
