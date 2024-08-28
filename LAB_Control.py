@@ -18,12 +18,12 @@ LAB_IPS = {
 }
 
 SEMESTER_SOFTWARES = {
-    "Semester 1": ["VS Code", "Python", "Git"],
-    "Semester 2": ["Java", "Eclipse", "Maven"],
-    "Semester 3": ["MySQL", "PHP", "Apache"],
-    "Semester 4": ["Docker", "Kubernetes", "Jenkins"],
-    "Semester 5": ["React", "Node.js", "MongoDB"],
-    "Semester 6": ["AWS CLI", "Terraform", "Ansible"]
+    "Semester 1": ["VS Code", "Turbo C", "MySQL Workbench", "Python", "XAAMP", "Scilab", "Cisco Packet Tracer"],
+    "Semester 2": ["Java", "VS Code", "Turbo C", "MySQL Workbench", "Python", "XAAMP", "Scilab"],
+    "Semester 3": ["Java", "Oracle (PL/SQL)", "Turbo C", "VS Code", "Python", "XAAMP", "MYSQL", "Flutter"],
+    "Semester 4": ["VS Code", "Turbo C", "MySQL Workbench", "Python", "Netbeans", "Java", "Oracle"],
+    "Semester 5": [VS Code", "Turbo C", "MySQL Workbench", "Python", "Netbeans", "Java", "Oracle", "Selenium", "StarUML"],
+    "Semester 6": ["Python", "Netbeans", "Java", "Oracle", "Selenium", "StarUML", "MongoDB", "R Studio"]
 }
 
 async def send_request(ip_address, command):
