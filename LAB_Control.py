@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 import asyncio
 import websockets
 from PIL import Image
@@ -49,35 +50,35 @@ def on_install_button_click():
     selected_semester = semester_combobox.get()
 
     if not selected_lab:
-        ctk.CTkMessagebox.show_warning("Warning", "Please select a lab")
+        CTkMessagebox(title="Warning", message="Please select a lab", icon="warning").show()
         return
 
     if not selected_semester:
-        ctk.CTkMessagebox.show_warning("Warning", "Please select a software package")
+        CTkMessagebox(title="Warning", message="Please select a software package", icon="warning").show()
         return
 
     if not acknowledge_var.get():
-        ctk.CTkMessagebox.show_warning("Warning", "Please acknowledge")
+        CTkMessagebox(title="Warning", message="Please acknowledge", icon="warning").show()
         return
 
     command = "open_notepad"
     ip_groups = LAB_IPS[selected_lab]
     for ip_group in ip_groups:
         asyncio.run(send_requests_to_group(ip_group, command))
-    ctk.CTkMessagebox.show_info("Info", "Requests sent successfully")
+    CTkMessagebox(title="Info", message="Requests sent successfully", icon="info").show()
 
 def on_update_button_click():
-    ctk.CTkMessagebox.show_info("Update", "Update functionality is not implemented yet.")
+    CTkMessagebox(title="Update", message="Update functionality is not implemented yet.", icon="info").show()
 
 def on_list_softwares_button_click():
     selected_semester = semester_combobox.get()
     if not selected_semester:
-        ctk.CTkMessagebox.show_warning("Warning", "Please select a software package")
+        CTkMessagebox(title="Warning", message="Please select a software package", icon="warning").show()
         return
 
     software_list = SEMESTER_SOFTWARES.get(selected_semester, [])
     software_display = "\n".join(software_list) if software_list else "No software available for this semester."
-    ctk.CTkMessagebox.show_info("Software List", f"List of software packages for {selected_semester}:\n\n{software_display}")
+    CTkMessagebox(title="Software List", message=f"List of software packages for {selected_semester}:\n\n{software_display}", icon="info").show()
 
 root = ctk.CTk()
 root.title("Automated Software Installer")
