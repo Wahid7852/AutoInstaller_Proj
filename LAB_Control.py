@@ -93,14 +93,14 @@ font_medium = ctk.CTkFont(size=14)
 lab_label = ctk.CTkLabel(center_frame, text="Select Lab", font=font_large)
 lab_label.pack(pady=10)
 
-lab_combobox = ctk.CTkComboBox(center_frame, values=list(LAB_IPS.keys()), width=300)
+lab_combobox = ctk.CTkComboBox(center_frame, values=list(LAB_IPS.keys()), width=300, state="readonly")
 lab_combobox.pack(pady=10)
 
 semester_label = ctk.CTkLabel(center_frame, text="Software Package:", font=font_large)
 semester_label.pack(pady=10)
 
 semesters = [f"Semester {i}" for i in range(1, 7)]
-semester_combobox = ctk.CTkComboBox(center_frame, values=semesters, width=300)
+semester_combobox = ctk.CTkComboBox(center_frame, values=semesters, width=300, state="readonly")
 semester_combobox.pack(pady=10)
 
 acknowledge_var = ctk.BooleanVar()
