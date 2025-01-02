@@ -2,7 +2,6 @@ import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
 import asyncio
 import websockets
-from PIL import Image, ImageTk
 
 ctk.set_appearance_mode("Dark")  # Modes: "System" (default), "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Themes: "blue" (default), "green", "dark-blue"
@@ -83,12 +82,6 @@ def on_list_softwares_button_click():
 root = ctk.CTk()
 root.title("Automated Software Installer")
 root.geometry("800x600")
-
-# Load and set the background image
-bg_image = Image.open("images/tech_background.jpg")
-bg_photo = ImageTk.PhotoImage(bg_image)
-background_label = ctk.CTkLabel(root, image=bg_photo, text="")
-background_label.place(relwidth=1, relheight=1)
 
 # Transparent center frame
 center_frame = ctk.CTkFrame(root, corner_radius=10, fg_color="transparent")
