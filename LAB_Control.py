@@ -2,6 +2,7 @@ import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
 import asyncio
 import websockets
+import json
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -19,15 +20,7 @@ LAB_IPS = {
     ]
 }
 
-SEMESTER_SOFTWARES = {
-    f"Semester {i}": [
-        "VS Code", "Turbo C", "MySQL Workbench", "Python", "XAAMP", "Scilab"
-    ] + ("Cisco Packet Tracer" if i == 1 else []) +
-    (["Java", "Netbeans"] if i >= 2 else []) +
-    (["Oracle", "Flutter", "Selenium", "StarUML"] if i >= 3 else []) +
-    (["MongoDB", "R Studio"] if i == 6 else [])
-    for i in range(1, 7)
-}
+LOCAL_SOFTWARE_JSON = "software_list.json"
 
 async def send_request(ip_address, command):
     uri = f"ws://{ip_address}:35369"
@@ -41,6 +34,14 @@ async def send_requests_to_group(ip_group, command):
     tasks = [send_request(ip, command) for ip in ip_group]
     await asyncio.gather(*tasks)
     await asyncio.sleep(3)
+
+def fetch_software_list():
+    try:
+        with open(LOCAL_SOFTWARE_JSON, "r") as file:
+            return json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        CTkMessagebox(title="Error", message=f"Failed to load software list: {e}", icon="error")
+        return {}
 
 def on_install_button_click():
     selected_lab = lab_combobox.get()
@@ -58,24 +59,33 @@ def on_install_button_click():
         CTkMessagebox(title="Warning", message="Please acknowledge", icon="warning")
         return
 
-    command = "open_notepad"
-    ip_groups = LAB_IPS[selected_lab]
-    for ip_group in ip_groups:
-        asyncio.run(send_requests_to_group(ip_group, command))
-    CTkMessagebox(title="Info", message="Requests sent successfully", icon="info")
+    software_list = fetch_software_list()
+    semester_softwares = software_list.get(selected_semester, [])
+    for software in semester_softwares:
+        command = f"download:{software}"
+        ip_groups = LAB_IPS[selected_lab]
+        for ip_group in ip_groups:
+            asyncio.run(send_requests_to_group(ip_group, command))
+    CTkMessagebox(title="Info", message="Download requests sent successfully", icon="info")
 
 def on_update_button_click():
     CTkMessagebox(title="Update", message="Update functionality is not implemented yet.", icon="info")
 
 def on_list_softwares_button_click():
+    software_list = fetch_software_list()
     selected_semester = semester_combobox.get()
+
     if not selected_semester:
         CTkMessagebox(title="Warning", message="Please select a software package", icon="warning")
         return
 
-    software_list = SEMESTER_SOFTWARES.get(selected_semester, [])
-    software_display = "\n".join(software_list) if software_list else "No software available for this semester."
-    CTkMessagebox(title="Software List", message=f"List of software packages for {selected_semester}:\n\n{software_display}", icon="info")
+    semester_softwares = software_list.get(selected_semester, [])
+    if not semester_softwares:
+        CTkMessagebox(title="Info", message="No software available for this semester.", icon="info")
+        return
+
+    software_display = "\\n".join(semester_softwares)
+    CTkMessagebox(title="Software List", message=f"List of software packages for {selected_semester}:\\n\\n{software_display}", icon="info")
 
 root = ctk.CTk()
 root.title("Automated Software Installer")
@@ -96,7 +106,8 @@ lab_combobox.pack(pady=10)
 semester_label = ctk.CTkLabel(center_frame, text="Software Package:", font=font_large)
 semester_label.pack(pady=10)
 
-semesters = list(SEMESTER_SOFTWARES.keys())
+software_list = fetch_software_list()
+semesters = list(software_list.keys())
 semester_combobox = ctk.CTkComboBox(center_frame, values=semesters, width=300, state="readonly")
 semester_combobox.pack(pady=10)
 

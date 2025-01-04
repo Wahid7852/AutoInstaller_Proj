@@ -1,0 +1,60 @@
+{
+  "Semester 1": [
+    "VS_Code",
+    "Turbo_C",
+    "MySQL_Workbench",
+    "Python",
+    "XAAMP",
+    "Scilab",
+    "Cisco_Packet_Tracer"
+  ],
+  "Semester 2": [
+    "Java",
+    "VS_Code",
+    "Turbo_C",
+    "MySQL_Workbench",
+    "Python",
+    "XAAMP",
+    "Scilab"
+  ],
+  "Semester 3": [
+    "Java",
+    "Oracle_PL_SQL",
+    "Turbo_C",
+    "VS_Code",
+    "Python",
+    "XAAMP",
+    "MYSQL",
+    "Flutter"
+  ],
+  "Semester 4": [
+    "VS_Code",
+    "Turbo_C",
+    "MySQL_Workbench",
+    "Python",
+    "Netbeans",
+    "Java",
+    "Oracle"
+  ],
+  "Semester 5": [
+    "VS_Code",
+    "Turbo_C",
+    "MySQL_Workbench",
+    "Python",
+    "Netbeans",
+    "Java",
+    "Oracle",
+    "Selenium",
+    "StarUML"
+  ],
+  "Semester 6": [
+    "Python",
+    "Netbeans",
+    "Java",
+    "Oracle",
+    "Selenium",
+    "StarUML",
+    "MongoDB",
+    "R_Studio"
+  ]
+}
