@@ -3,8 +3,8 @@ from CTkMessagebox import CTkMessagebox
 import asyncio
 import websockets
 
-ctk.set_appearance_mode("Dark")  # Modes: "System" (default), "Dark", "Light"
-ctk.set_default_color_theme("blue")  # Themes: "blue" (default), "green", "dark-blue"
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("blue")
 
 LAB_IPS = {
     'IT Lab': [
@@ -20,12 +20,13 @@ LAB_IPS = {
 }
 
 SEMESTER_SOFTWARES = {
-    "Semester 1": ["VS Code", "Turbo C", "MySQL Workbench", "Python", "XAAMP", "Scilab", "Cisco Packet Tracer"],
-    "Semester 2": ["Java", "VS Code", "Turbo C", "MySQL Workbench", "Python", "XAAMP", "Scilab"],
-    "Semester 3": ["Java", "Oracle (PL/SQL)", "Turbo C", "VS Code", "Python", "XAAMP", "MYSQL", "Flutter"],
-    "Semester 4": ["VS Code", "Turbo C", "MySQL Workbench", "Python", "Netbeans", "Java", "Oracle"],
-    "Semester 5": ["VS Code", "Turbo C", "MySQL Workbench", "Python", "Netbeans", "Java", "Oracle", "Selenium", "StarUML"],
-    "Semester 6": ["Python", "Netbeans", "Java", "Oracle", "Selenium", "StarUML", "MongoDB", "R Studio"]
+    f"Semester {i}": [
+        "VS Code", "Turbo C", "MySQL Workbench", "Python", "XAAMP", "Scilab"
+    ] + ("Cisco Packet Tracer" if i == 1 else []) +
+    (["Java", "Netbeans"] if i >= 2 else []) +
+    (["Oracle", "Flutter", "Selenium", "StarUML"] if i >= 3 else []) +
+    (["MongoDB", "R Studio"] if i == 6 else [])
+    for i in range(1, 7)
 }
 
 async def send_request(ip_address, command):
@@ -33,15 +34,12 @@ async def send_request(ip_address, command):
     try:
         async with websockets.connect(uri) as websocket:
             await websocket.send(command)
-            print(f"Sent '{command}' to {ip_address}")
-    except asyncio.TimeoutError:
-        print(f"Timeout connecting to {ip_address}. Moving to the next IP.")
-    except Exception as e:
-        print(f"Error connecting to {ip_address}: {e}")
+    except (asyncio.TimeoutError, Exception):
+        pass
 
 async def send_requests_to_group(ip_group, command):
-    for ip_address in ip_group:
-        await send_request(ip_address, command)
+    tasks = [send_request(ip, command) for ip in ip_group]
+    await asyncio.gather(*tasks)
     await asyncio.sleep(3)
 
 def on_install_button_click():
@@ -83,7 +81,6 @@ root = ctk.CTk()
 root.title("Automated Software Installer")
 root.geometry("800x600")
 
-# Transparent center frame
 center_frame = ctk.CTkFrame(root, corner_radius=10, fg_color="transparent")
 center_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
@@ -99,7 +96,7 @@ lab_combobox.pack(pady=10)
 semester_label = ctk.CTkLabel(center_frame, text="Software Package:", font=font_large)
 semester_label.pack(pady=10)
 
-semesters = [f"Semester {i}" for i in range(1, 7)]
+semesters = list(SEMESTER_SOFTWARES.keys())
 semester_combobox = ctk.CTkComboBox(center_frame, values=semesters, width=300, state="readonly")
 semester_combobox.pack(pady=10)
 
