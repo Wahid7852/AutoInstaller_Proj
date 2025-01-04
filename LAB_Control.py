@@ -59,13 +59,10 @@ def on_install_button_click():
         CTkMessagebox(title="Warning", message="Please acknowledge", icon="warning")
         return
 
-    software_list = fetch_software_list()
-    semester_softwares = software_list.get(selected_semester, [])
-    for software in semester_softwares:
-        command = f"download:{software}"
-        ip_groups = LAB_IPS[selected_lab]
-        for ip_group in ip_groups:
-            asyncio.run(send_requests_to_group(ip_group, command))
+    command = f"download:{selected_semester}"
+    ip_groups = LAB_IPS[selected_lab]
+    for ip_group in ip_groups:
+        asyncio.run(send_requests_to_group(ip_group, command))
     CTkMessagebox(title="Info", message="Download requests sent successfully", icon="info")
 
 def on_update_button_click():
@@ -84,8 +81,8 @@ def on_list_softwares_button_click():
         CTkMessagebox(title="Info", message="No software available for this semester.", icon="info")
         return
 
-    software_display = "\\n".join(semester_softwares)
-    CTkMessagebox(title="Software List", message=f"List of software packages for {selected_semester}:\\n\\n{software_display}", icon="info")
+    software_display = "\n".join(semester_softwares)
+    CTkMessagebox(title="Software List", message=f"List of software packages for {selected_semester}:\n\n{software_display}", icon="info")
 
 root = ctk.CTk()
 root.title("Automated Software Installer")
@@ -113,8 +110,8 @@ semester_combobox.pack(pady=10)
 
 acknowledge_var = ctk.BooleanVar()
 acknowledge_checkbutton = ctk.CTkCheckBox(
-    center_frame, 
-    text="I acknowledge the above software will be installed", 
+    center_frame,
+    text="I acknowledge the above software will be installed",
     variable=acknowledge_var,
     font=font_medium
 )

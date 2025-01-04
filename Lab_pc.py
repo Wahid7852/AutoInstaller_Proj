@@ -2,24 +2,24 @@ import asyncio
 import websockets
 import subprocess
 
+def download_software_package(package_name):
+    try:
+        zip_url = f"https://github.com/YourUsername/YourRepo/raw/main/packages/{package_name}.zip"
+        subprocess.run(["curl", "-L", zip_url, "-o", f"{package_name}.zip"], check=True)
+        print(f"{package_name} package downloaded successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to download {package_name} package: {e}")
+
 async def ws_server(websocket, path):
     print("WebSocket server started.")
     try:
         async for message in websocket:
             print(f"Received message: {message}")
             if message.startswith("download:"):
-                software_name = message.split(":", 1)[1]
-                download_software(software_name)
+                package_name = message.split(":", 1)[1]
+                download_software_package(package_name)
     except websockets.ConnectionClosedError:
         print("Connection closed.")
-
-def download_software(software_name):
-    try:
-        software_url = f"https://github.com/YourUsername/YourRepo/raw/main/softwares/{software_name}.exe"
-        subprocess.run(["curl", "-L", software_url, "-o", f"{software_name}.exe"], check=True)
-        print(f"{software_name} downloaded successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to download {software_name}: {e}")
 
 async def start_ws_server():
     server = await websockets.serve(ws_server, "0.0.0.0", 35369)
