@@ -4,11 +4,21 @@ import subprocess
 
 def download_software_package(package_name):
     try:
-        zip_url = f"https://github.com/YourUsername/YourRepo/raw/main/packages/{package_name}.zip"
-        subprocess.run(["curl", "-L", zip_url, "-o", f"{package_name}.zip"], check=True)
-        print(f"{package_name} package downloaded successfully.")
+        base_url = "https://github.com/Wahid7852/autoInstaller-backend/raw/main"
+        bat_script_url = f"{base_url}/install.bat"
+        config_file_url = f"{base_url}/packages.config"
+
+        print("Downloading the installation script...")
+        subprocess.run(["curl", "-L", bat_script_url, "-o", "install.bat"], check=True)
+
+        print("Downloading the packages.config file...")
+        subprocess.run(["curl", "-L", config_file_url, "-o", "packages.config"], check=True)
+
+        print("Executing the installation script...")
+        subprocess.run(["install.bat"], check=True)
+        print("Installation completed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"Failed to download {package_name} package: {e}")
+        print(f"Error during script execution: {e}")
 
 async def ws_server(websocket, path):
     print("WebSocket server started.")
