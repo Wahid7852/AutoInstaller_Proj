@@ -13,7 +13,7 @@ This project is designed for:
 
 ## Key Features
 
-### Lab_Control
+### LabManager
 - **Lab-Specific Software Deployment:**
   - Choose between "IT Lab" and "CS Lab," each mapped to predefined groups of IP addresses.
 - **Semester-Based Software Selection:**
@@ -25,7 +25,7 @@ This project is designed for:
 - **Acknowledgment Confirmation:**
   - Prevent accidental installations with a mandatory acknowledgment checkbox.
 
-### Lab_pc
+### LabClient
 - **WebSocket Server:**
   - Receives commands from Lab_Control to execute installation scripts.
 - **Automated Script Execution:**
