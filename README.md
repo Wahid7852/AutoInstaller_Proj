@@ -1,64 +1,95 @@
-**Software Installation Automation**
+# Software Installation Automation
 
-- Project Introduction
-The Software Installation Automation project is a Python-based desktop application designed to streamline the process of installing software packages across multiple computers in IT and CS labs. With a user-friendly interface and seamless communication via WebSockets, this tool enables administrators to install necessary software packages remotely, ensuring that all lab machines are updated and configured consistently.
-Target Audience
+## Project Introduction
+The Software Installation Automation project is a Python-based application designed to streamline the software installation process across multiple systems in IT and CS labs. By leveraging WebSocket communication and a user-friendly interface, this tool enables administrators to remotely install, update, and manage software packages efficiently.
 
-**This project is specifically directed towards:**
+## Target Audience
 
-- System Administrators: Manage and automate the software installation process across multiple lab computers.
-- Educational Institutions: Ensure that lab computers are uniformly set up with the required software packages for various semesters.
-- IT Professionals: Simplify the deployment of software packages in environments where manual installation is impractical.
+This project is designed for:
 
-**Key Features**
+- **System Administrators:** Simplify software deployment across multiple lab computers.
+- **Educational Institutions:** Maintain uniform software setups for different semesters in IT and CS labs.
+- **IT Professionals:** Automate software deployment in large-scale environments, reducing manual effort.
 
-- Lab-Specific Software Deployment: Choose between IT Lab and CS Lab, each containing predefined groups of IP addresses for the machines in those labs.
-- Semester-Based Software Packages: Select from Semester 1 to 6, with predefined software packages (VS Code, Python, MySQL).
-- Remote Installation: Send installation commands via WebSocket to all machines in the selected lab, ensuring that the required software is installed without the need for physical presence.
-- Acknowledgment Check: Includes a mandatory acknowledgment checkbox to prevent accidental installations.
-- Update Functionality: Placeholder for future updates to the software deployment process.
+## Key Features
 
-**-How to Run**
+### Lab_Control
+- **Lab-Specific Software Deployment:**
+  - Choose between "IT Lab" and "CS Lab," each mapped to predefined groups of IP addresses.
+- **Semester-Based Software Selection:**
+  - Select semester-specific software packages (e.g., VS Code, Python, MySQL).
+- **Git Token Integration:**
+  - Prompt administrators to enter their Git token before installation. The token is securely passed to the client PCs for downloading installation files.
+- **Remote Installation Commands:**
+  - Send commands over WebSocket to execute software installations on remote systems.
+- **Acknowledgment Confirmation:**
+  - Prevent accidental installations with a mandatory acknowledgment checkbox.
 
-**Prerequisites**
+### Lab_pc
+- **WebSocket Server:**
+  - Receives commands from Lab_Control to execute installation scripts.
+- **Automated Script Execution:**
+  - Downloads and runs installation scripts (`install.bat`) and package configurations (`packages.config`) from a GitHub repository.
+- **Error Handling and Logs:**
+  - Logs errors and execution statuses for monitoring.
+- **Integration with Chocolatey:**
+  - Uses Chocolatey to install software based on the configuration file.
 
-    Python 3.x: Ensure that Python is installed on your system.
+## How to Run
 
-    Required Libraries: Install the necessary Python libraries by running:
-    pip install -r requirements.txt
+### Prerequisites
+- **Python 3.x:** Ensure Python is installed.
+- **Required Libraries:**
+  Install the necessary dependencies:
+  ```bash
+  pip install -r requirements.txt
+  ```
+- **PyInstaller:**
+  To create standalone executables:
+  ```bash
+  pip install pyinstaller
+  ```
 
-Running the Application
+### Running Lab_Control
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/software-installation-automation.git
+   cd software-installation-automation
+   ```
+2. Start the application:
+   ```bash
+   python Lab_Control.py
+   ```
+3. Use the interface to select labs, software packages, and initiate installation.
 
-    Clone the Repository:
-    git clone https://github.com/yourusername/software-installation-automation.git
-    
-    cd software-installation-automation
+### Running Lab_pc
+1. Use PyInstaller to create a standalone `.exe` for Lab_pc:
+   ```bash
+   pyinstaller --onefile --noconsole Lab_pc.py
+   ```
+2. Copy the `.exe` to the target machine.
+3. Run the `.exe` to start the WebSocket server.
 
-Run the Application:
+## Workflow
+1. **Lab_Control:**
+   - Prompts the user for a Git token.
+   - Sends installation commands along with the token to client PCs via WebSocket.
+2. **Lab_pc:**
+   - Downloads `install.bat` and `packages.config` using the Git token.
+   - Executes the `install.bat` to install the required software using Chocolatey.
 
-    Launch the application by executing the following command:
-        python LAB_Control.py
+## Scope
+The project provides a reliable solution for automating software installations in lab environments. It includes:
+- WebSocket communication for remote command execution.
+- Predefined software packages tailored for educational purposes.
+- Git token-based authentication for secure file downloads.
 
-        The application window will open, maximized by default, with a clean and intuitive user interface.
-
-Using the Application:
-        
-1. Select Lab: Choose either "IT Lab" or "CS Lab" from the dropdown list.
-2. Software Package: Select the appropriate semester (1 to 6) from the dropdown menu.
-3. Acknowledge: Check the acknowledgment box to confirm the software installation.
-4. Install: Click the "Install" button to initiate the software installation process.
-5. Update: Use the "Update" button to refresh the software installation configuration (feature to be implemented).
-
-**Scope**
-
-This project aims to provide a robust solution for automating software installations across lab environments. The current scope includes:
-    
-- Basic WebSocket communication: The application sends installation commands to lab machines over a WebSocket connection.
-- Predefined Software Packages: The application includes predefined software packages for educational semesters.
-- User Interface: A user-friendly and techy interface designed to be intuitive for administrators.
-
-**Future Enhancements:**
-
-- Dynamic Software Selection: Allow administrators to dynamically choose software packages to install.
-- Detailed Logs: Implement logging to track installation status and errors.
-- Update Feature: Fully develop the update functionality to allow updating software packages remotely.
+## Future Enhancements
+- **Dynamic Software Selection:**
+  - Enable administrators to define software packages dynamically.
+- **Detailed Logs:**
+  - Implement a logging mechanism to track installation progress and errors.
+- **Live Monitoring:**
+  - Add a real-time dashboard to monitor installation status across systems.
+- **Enhanced Update Functionality:**
+  - Develop a feature to update existing installations remotely.
