@@ -34,7 +34,8 @@ This project is designed for:
   - Logs errors and execution statuses for monitoring.
 - **Integration with Chocolatey:**
   - Uses Chocolatey to install software based on the configuration file.
-
+- Hardcodes GitHub auth token
+  
 ## How to Run
 
 ### Prerequisites
