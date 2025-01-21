@@ -86,11 +86,9 @@ The project provides a reliable solution for automating software installations i
 - Git token-based authentication for secure file downloads.
 
 ## Future Enhancements
-- **Dynamic Software Selection:**
-  - Enable administrators to define software packages dynamically.
-- **Detailed Logs:**
-  - Implement a logging mechanism to track installation progress and errors.
 - **Live Monitoring:**
   - Add a real-time dashboard to monitor installation status across systems.
 - **Enhanced Update Functionality:**
   - Develop a feature to update existing installations remotely.
+- **Lock PC while installation:**
+  - Develop a feature to lock user PCs when installating softwares.
