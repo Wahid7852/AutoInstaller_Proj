@@ -1,4 +1,4 @@
-# Software Installation Automation
+# AutoInstaller
 
 ## Project Introduction
 The Software Installation Automation project is a Python-based application designed to streamline the software installation process across multiple systems in IT and CS labs. By leveraging WebSocket communication and a user-friendly interface, this tool enables administrators to remotely install, update, and manage software packages efficiently.
